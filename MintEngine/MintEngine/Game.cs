@@ -9,6 +9,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using OpenTK.Graphics.OpenGL;
 
+
 namespace MintEngine
 {
     public class Game
@@ -31,11 +32,14 @@ namespace MintEngine
 
         VAO<float> vao;
         Shader shader;
-        Texture texture;
+        Texture texture1;
+        Texture texture2;
         public void Load(object sender, EventArgs e)
         {
             game.VSync = VSyncMode.On;
-
+            GL.Enable(EnableCap.Texture2D);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.Blend);
             float[] vertices = {
                 //Position          Texture coordinates
              0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // top right
@@ -49,17 +53,15 @@ namespace MintEngine
                 2, 0, 3   // second triangle
             };
             shader = new Shader(Shader.defaultVertexShader, Shader.defaultFragmentShader);
-            texture = new Texture(@"textures/texture.png");
+            texture1 = new Texture(@"textures/texture.png");
+            texture2 = new Texture(@"textures/texture2.png");
+            shader.SetInt("texture1", 0);
+            shader.SetInt("texture2", 1);
             vao = new VAO<float>(shader);
             vao.AddVertexBufferObject(vertices);
             vao.AddIndices(indices);
 
-            texture.Bind();
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
-            float[] borderColor = { 1.0f, 1.0f, 0.0f, 1.0f };
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureBorderColor, borderColor);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            
 
         }
 
@@ -73,8 +75,10 @@ namespace MintEngine
             GL.ClearColor(Color4.CornflowerBlue);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
-            texture.Use();
-            texture.Bind();
+            texture1.Use(TextureUnit.Texture0);
+            shader.SetInt("texture1", 0);
+            texture2.Use(TextureUnit.Texture1);
+            shader.SetInt("texture2", 1);
             vao.Draw();
             
 

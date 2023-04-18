@@ -60,8 +60,6 @@ namespace MintEngine.Rendering.Bridges
             Bind();
             for(int i = 0; i < attributeIndex; i+=2)
             {
-                GL.VertexAttribPointer(i, 3, VertexAttribPointerType.Float, false, 5 * Marshal.SizeOf<T>(), 0);
-                GL.VertexAttribPointer(i + 1, 2, VertexAttribPointerType.Float, false, 5 * Marshal.SizeOf<T>(), 3 * Marshal.SizeOf<T>());
                 GL.EnableVertexAttribArray(i);
                 GL.EnableVertexAttribArray(i+1);
             }

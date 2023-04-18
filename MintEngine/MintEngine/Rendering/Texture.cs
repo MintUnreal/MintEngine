@@ -1,4 +1,4 @@
-﻿using OpenTK.Graphics.OpenGL4;
+﻿using OpenTK.Graphics.OpenGL;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -15,21 +15,9 @@ namespace MintEngine.Rendering
         {
             if (!File.Exists(_path)) Console.WriteLine(_path + " не существует!");
             Handle = GL.GenTexture();
-            path = _path;
-        }
-        /// <summary>
-        /// Выбрать эту текстуру для рендера
-        /// </summary>
-        public void Bind()
-        {
             GL.BindTexture(TextureTarget.Texture2D, Handle);
-        }
-        public void Use()
-        {
-            GL.BindTexture(TextureTarget.Texture2D, Handle);
-
             //Load the image
-            Image<Rgba32> image = Image.Load<Rgba32>(path);
+            Image<Rgba32> image = Image.Load<Rgba32>(_path);
 
             //ImageSharp loads from the top-left pixel, whereas OpenGL loads from the bottom-left, causing the texture to be flipped vertically.
             //This will correct that, making the texture display properly.
@@ -40,6 +28,20 @@ namespace MintEngine.Rendering
             image.CopyPixelDataTo(pixels);
 
             GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels);
+            path = _path;
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.Repeat);
+            float[] borderColor = { 1.0f, 1.0f, 0.0f, 1.0f };
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureBorderColor, borderColor);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+        }
+        /// <summary>
+        /// Выбрать эту текстуру для рендера
+        /// </summary>
+        public void Use(TextureUnit unit = TextureUnit.Texture0)
+        {
+            GL.ActiveTexture(unit); // activate the texture unit first before binding texture
+            GL.BindTexture(TextureTarget.Texture2D, Handle);
             
         }
     }

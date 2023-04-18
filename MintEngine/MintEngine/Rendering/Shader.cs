@@ -68,6 +68,21 @@ namespace MintEngine.Rendering
             
         }
 
+        /// <summary>
+        /// Добавляет униформу в шейдер
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="value"></param>
+        public void SetInt(string name, int value)
+        {
+            int location = GL.GetUniformLocation(Handle, name);
+
+            GL.Uniform1(location, value);
+        }
+
+        /// <summary>
+        /// Применить этот шейдер
+        /// </summary>
         public void Use()
         {
             GL.UseProgram(Handle);
@@ -84,7 +99,6 @@ namespace MintEngine.Rendering
                 disposedValue = true;
             }
         }
-
         ~Shader()
         {
             if (disposedValue == false)
@@ -93,7 +107,9 @@ namespace MintEngine.Rendering
             }
         }
 
-
+        /// <summary>
+        /// утилизировать шейдер
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
@@ -116,7 +132,6 @@ namespace MintEngine.Rendering
                 gl_Position = vec4(aPosition, 1.0);
             }
             ";
-
         public const string defaultFragmentShader = @"
             #version 330
 
@@ -124,11 +139,12 @@ namespace MintEngine.Rendering
 
             in vec2 texCoord;
 
-            uniform sampler2D texture0;
+            uniform sampler2D texture1;
+            uniform sampler2D texture2;
 
             void main()
             {
-                outputColor = texture(texture0, texCoord);
+                outputColor = mix(texture(texture1, texCoord), texture(texture2, texCoord), 0.2);
             }
             ";
     }
