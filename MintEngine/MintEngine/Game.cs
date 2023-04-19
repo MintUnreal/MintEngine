@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,15 +28,19 @@ namespace MintEngine
 
         public void Run()
         {
-            game.Run();
+            game.Run(60);
         }
 
         VAO<float> vao;
         Shader shader;
         Texture texture1;
         Texture texture2;
+
+        private Stopwatch stopWatch;
         public void Load(object sender, EventArgs e)
         {
+            stopWatch = new Stopwatch();
+            stopWatch.Start();
             game.VSync = VSyncMode.On;
             GL.Enable(EnableCap.Texture2D);
             GL.Enable(EnableCap.DepthTest);
@@ -61,17 +66,36 @@ namespace MintEngine
             vao.AddVertexBufferObject(vertices);
             vao.AddIndices(indices);
 
-            
+
 
         }
+
+        Matrix4 trans = new Matrix4();
 
         public void Resize(object sender, EventArgs e)
         {
             GL.Viewport(0, 0, game.Width, game.Height);
         }
 
+        private int fps = 0;
+        private float angle = 0;
         public void Render(object sender, EventArgs e)
         {
+            if(stopWatch.ElapsedMilliseconds > 10)
+            {
+                angle++;
+                Matrix4 rotation = Matrix4.CreateRotationY(MathHelper.DegreesToRadians(angle)) * Matrix4.CreateRotationX(MathHelper.DegreesToRadians(angle)) * Matrix4.CreateRotationZ(MathHelper.DegreesToRadians(angle));
+                Matrix4 scale = Matrix4.CreateScale(0.5f, 0.5f, 0.5f);
+                trans = rotation * scale;
+            }
+            if (stopWatch.ElapsedMilliseconds > 1000)
+            {
+                Console.WriteLine("FPS: "+fps);
+                stopWatch.Restart();
+                fps = 0;
+            }
+            else fps++;
+
             GL.ClearColor(Color4.CornflowerBlue);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -79,6 +103,7 @@ namespace MintEngine
             shader.SetInt("texture1", 0);
             texture2.Use(TextureUnit.Texture1);
             shader.SetInt("texture2", 1);
+            shader.SetMat4("transform", trans);
             vao.Draw();
             
 
