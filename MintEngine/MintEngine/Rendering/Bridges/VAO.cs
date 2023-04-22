@@ -65,7 +65,8 @@ namespace MintEngine.Rendering.Bridges
             }
             GL.BindBuffer(BufferTarget.ElementArrayBuffer, indices);
             shader.Use();
-            GL.DrawElements(PrimitiveType.Triangles, indicesCount, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            //GL.DrawElements(PrimitiveType.Triangles, indicesCount, DrawElementsType.UnsignedInt, IntPtr.Zero);
+            GL.DrawArrays(PrimitiveType.Triangles, 0, 36);
         }
 
         /// <summary>

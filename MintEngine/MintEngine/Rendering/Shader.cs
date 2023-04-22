@@ -129,11 +129,13 @@ namespace MintEngine.Rendering
 
             out vec2 texCoord;
   
-            uniform mat4 transform;
+            uniform mat4 model;
+            uniform mat4 view;
+            uniform mat4 projection;
 
             void main()
             {
-                gl_Position = vec4(aPos, 1.0f) * transform;
+                gl_Position =  vec4(aPos, 1.0) * model * view * projection;
                 texCoord = vec2(aTexCoord.x, aTexCoord.y);
             }
             ";
