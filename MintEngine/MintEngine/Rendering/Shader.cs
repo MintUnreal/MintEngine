@@ -155,4 +155,6 @@ namespace MintEngine.Rendering
             }
             ";
     }
+
+    public class nullShaderExeption : Exception { }
 }

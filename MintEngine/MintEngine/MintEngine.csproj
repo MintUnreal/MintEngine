@@ -71,9 +71,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Component\BuiltInComponents\MeshRenderer.cs" />
+    <Compile Include="Component\BuiltInComponents\newcomponent.cs" />
+    <Compile Include="Component\BuiltInComponents\Transform.cs" />
+    <Compile Include="Component\GameObject.cs" />
+    <Compile Include="Component\MonoBehavior.cs" />
+    <Compile Include="Editor\Camera.cs" />
     <Compile Include="Game.cs" />
     <Compile Include="Rendering\Bridges\VAO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rendering\Material.cs" />
     <Compile Include="Rendering\Shader.cs" />
     <Compile Include="Rendering\Texture.cs" />
   </ItemGroup>

@@ -8,14 +8,12 @@ namespace MintEngine.Rendering.Bridges
 {
     public class VAO <T> where T : struct
     {
-        public VAO(Shader _shader)
+        public VAO()
         {
             array = GL.GenVertexArray();
             Bind();
             buffers = new List<int>();
-            shader = _shader;
         }
-        private Shader shader;
 
         private int array; //сам VAO
         private List<int> buffers; //список VBO
@@ -54,7 +52,7 @@ namespace MintEngine.Rendering.Bridges
         /// Включаем указатель атрибутов чтобы шейдер видел данные
         /// </summary>
         /// <param name="size">количество вершин которое отрисуем</param>
-        public void Draw()
+        public void Draw(Shader shader)
         {
             if (indices == 0) throw new nullIndicesVAO();;
             Bind();
